@@ -22,6 +22,27 @@
     </service>
     <service>
         <publisher>OpenHome</publisher>
+        <dcpdir></dcpdir>
+        <domain>av.openhome.org</domain>
+        <type>Info</type>
+        <version>1</version>
+    </service>
+    <service>
+        <publisher>OpenHome</publisher>
+        <dcpdir></dcpdir>
+        <domain>av.openhome.org</domain>
+        <type>Time</type>
+        <version>1</version>
+    </service>
+    <service>
+        <publisher>OpenHome</publisher>
+        <dcpdir></dcpdir>
+        <domain>av.openhome.org</domain>
+        <type>Playlist</type>
+        <version>1</version>
+    </service>
+    <service>
+        <publisher>OpenHome</publisher>
         <dcpdir>Test</dcpdir>
         <domain>openhome.org</domain>
         <type>TestBasic</type>

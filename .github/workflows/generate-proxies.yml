@@ -1,0 +1,52 @@
+name: Generate service proxies
+
+# Runs on pushes to codegen/* branches (and manually). Regenerates all
+# T4 output from Services.xml and commits the result back to the same branch.
+on:
+  push:
+    branches: ['codegen/**']
+    paths:
+      - 'OpenHome/Net/Service/**'
+      - 'OpenHome/Net/T4/**'
+      - '.github/workflows/generate-proxies.yml'
+      - '.github/scripts/generate-proxies.sh'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: generate-proxies-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Build toolchain image (same as Linux-x64 build)
+        run: docker build -t ohnet-linux-x64-ci -f .github/docker/linux-x64/Dockerfile .github/docker/linux-x64
+
+      - name: Generate proxies
+        run: |
+          docker run --rm \
+            --user "$(id -u):$(id -g)" -e HOME=/tmp \
+            -v "${{ github.workspace }}:/workspace" -w /workspace \
+            ohnet-linux-x64-ci bash .github/scripts/generate-proxies.sh
+
+      - name: Show changes
+        run: git status --short
+
+      - name: Commit generated sources
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Generated OpenHome
+          if git diff --cached --quiet; then
+            echo "No changes – generated sources are up to date."
+            exit 0
+          fi
+          git commit -m "chore(gen): regenerate service proxies from Services.xml"
+          git push
