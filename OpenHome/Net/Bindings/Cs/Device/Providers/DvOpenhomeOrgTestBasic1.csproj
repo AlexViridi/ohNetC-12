@@ -7,10 +7,11 @@
         <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('OSX'))">$(TargetFrameworks);net8.0-ios;net8.0-maccatalyst</TargetFrameworks>
 
         <EnableDefaultItems>False</EnableDefaultItems>
-        
+ 
         <IntermediateOutputPath>../../obj</IntermediateOutputPath>
 
         <Platform>AnyCPU</Platform>
+
         <ApplicationId>uk.co.linn.ohNet.OpenhomeOrgTestBasic1</ApplicationId>
     </PropertyGroup>
 
